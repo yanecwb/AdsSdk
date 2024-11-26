@@ -1,0 +1,38 @@
+{
+  "name": "cwb-utils",
+  "version": "1.0.2",
+  "description": "Looking to grow your business or monetize your traffic? 💰 Whether you're an advertiser seeking effective campaigns or a publisher looking to maximize revenue, we’ve got you covered. ",
+  "main": "dist/index.min.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "webpack && npx tsc --emitDeclarationOnly --declaration --outDir dist",
+    "release": "standard-version",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ADS",
+    "SDK",
+    "TELEGRAM"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yanecwb/AdsSdk.git"
+  },
+  "author": "Mobioko",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "babel-loader": "^9.2.1",
+    "standard-version": "^9.5.0",
+    "terser-webpack-plugin": "^5.3.10",
+    "ts-loader": "^9.5.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@babel/preset-typescript": "^7.26.0"
+  }
+}
