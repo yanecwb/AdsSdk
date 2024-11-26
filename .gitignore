@@ -13,6 +13,8 @@ logs
 .fleet
 .idea
 
+package.json
+
 # Local env files
 #.env
 #.env.*
