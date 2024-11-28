@@ -1,6 +1,6 @@
 {
   "name": "cwb-utils",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "description": "Looking to grow your business or monetize your traffic? 💰 Whether you're an advertiser seeking effective campaigns or a publisher looking to maximize revenue, we’ve got you covered. ",
   "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
