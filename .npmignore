@@ -8,5 +8,5 @@ tsconfig.json
 package.json
 
 *.log
-
+*.map
 CHANGELOG
