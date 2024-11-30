@@ -1,38 +1,7 @@
-interface CallbackFunc {
-  /**
-    Indicates loading advertising resources from the platform. If the publisher's slot/area does not have any resources to load, false will be returned
-  */
-  adResourceLoad?: (e: boolean) => void;
-  /**
-   Indicates that the interactive advertisement is currently open
-  */
-  adOpening?: (e: boolean) => void;
-  /**
-   Indicates that the interactive advertisement has been opened
-  */
-  adOpened?: (e: boolean) => void;
-  /**
-   Indicates completion of interactive advertising task, which is defined by the traffic owner
-  */
-  adTaskFinished?: (e: boolean) => void;
-  /**
-   Indicates that interactive advertising is being closed
-  */
-  adClosing?: (e: boolean) => void;
-  /**
-   Indicates that interactive advertising has been turned off
-  */
-  adClosed?: (e: "viewAD" | "click") => void;
-  /**
-   Indicates that it has been clicked and redirected
-  */
-  adClick?: (e: boolean) => void;
-}
+import { CallbackFunc } from "../../index.d";
 
-
-export default () => {
-  const w = window as any;
-  // w.addEventListener("DOMContentLoaded", function () {
+const w = window as any;
+w.addEventListener("DOMContentLoaded", function () {
   w.openADSdkLoader = {
     version: "3.0.4",
     build: "202411011700",
@@ -131,17 +100,18 @@ export default () => {
       noCache: true,
     });
   })();
-  // });
+});
+export default () => {
   const adInfo = {
     zoneId: 173,
     publisherId: 110,
     eventId: 0,
   };
+  const adParams = {
+    version: "1.3.0",
+    TG: { type: "telegram", FN: (window as any).Telegram },
+  };
   w.getOpenAdBannerAds = () => {
-    const adParams = {
-      version: "1.3.0",
-      TG: { type: "noSDK", FN: null },
-    };
     (window as any).openADJsSDK.bridge.init({
       adParams,
       adInfo: {
@@ -151,7 +121,7 @@ export default () => {
       },
     });
   };
-  w.getOpenAdTaskAds = (
+  w.getOpenAdTaskAds = async (
     userInfo: {
       userId?: string;
       firstName?: string;
@@ -159,15 +129,6 @@ export default () => {
       userName?: string;
     } = {}
   ) => {
-    const adParams = {
-      version: "1.3.0",
-      TG: { type: "noSDK", FN: null },
-    };
-    console.log({
-      adParams,
-      adInfo,
-      userInfo,
-    });
     return new Promise((resolve) => {
       (window as any).openADJsSDK?.interactive
         .init({
@@ -175,7 +136,7 @@ export default () => {
           adInfo,
           userInfo,
         })
-        .then((res: { code: number }) => {
+        .then(async (res: { code: number }) => {
           if (res?.code === 0) {
             resolve(true);
           } else {
@@ -184,17 +145,10 @@ export default () => {
         });
     });
   };
-  w.generateOpenAd = (cb: CallbackFunc) => {
+  w.generateOpenAd = (cb: CallbackFunc = {}) => {
     (window as any).openADJsSDK.interactive.getRender({
       adInfo,
       cb,
     });
   };
-  
 };
-
-
-
-
-
-

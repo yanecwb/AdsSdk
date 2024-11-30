@@ -18,7 +18,8 @@ export default async () => {
     );
     return Promise.all(srcArr);
   };
-  await loadScript([{ src: "https://sad.adsgram.ai/js/sad.min.js" }]);
-  console.log("Adsgram", (window as any).Adsgram);
+  if (!(window as any).Adsgram) {
+    await loadScript([{ src: "https://sad.adsgram.ai/js/sad.min.js" }]);
+  }
   return (window as any).Adsgram?.init({ blockId: "4753" }); //test 4754 pro 4753
 };
