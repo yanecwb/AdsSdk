@@ -1,4 +1,4 @@
-export default async () => {
+export default async (debug = false) => {
   const loadScript = async (scrArrParams: Array<any>) => {
     const insertScript = (src: string, attribute: Record<string, any> = {}) =>
       new Promise((resolve: any, reject: any) => {
@@ -21,5 +21,5 @@ export default async () => {
   if (!(window as any).Adsgram) {
     await loadScript([{ src: "https://sad.adsgram.ai/js/sad.min.js" }]);
   }
-  return (window as any).Adsgram?.init({ blockId: "4753" }); //test 4754 pro 4753
+  return (window as any).Adsgram?.init({ blockId: "4753", debug }); //test 4754 pro 4753
 };

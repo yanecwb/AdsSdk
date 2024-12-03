@@ -8,6 +8,7 @@
 import initAdsGram from "./src/AdsGram";
 import initAdsTonAi from "./src/TonAi";
 import initAdsOpen from "./src/OpenAd";
+import initAdsOutLink from "./src/OutLink";
 import { AdsType, InstanceAdsType } from "./index.d";
 const w = window as any;
 function weightedRandom(arr: Array<AdsType>, weights: Array<number>): AdsType {
@@ -40,18 +41,18 @@ const getDynamicsEvent = (show, click) => {
 
 // const loadBannerAds = () => AdsMap["openAd"].loadBannerAds();
 
-const entryAds = async (fixedType: AdsType) => {
+const entryAds = async (fixedType: AdsType,debug=false) => {
   const randomADS: AdsType = weightedRandom(
-    ["adsGram", "openAd", "tonai"],
+    ["adsGram", "openAd", "tonai", "outLink"],
     [5, 3, 2]
   );
-  
+
   const showAdWithCallbacks = async ({
     onAdShow,
     onAdClick,
     onAdComplete,
     adTaskFunction,
-    setZIndex = true
+    setZIndex = true,
   }: {
     onAdShow?: Function;
     onAdClick?: Function;
@@ -72,12 +73,14 @@ const entryAds = async (fixedType: AdsType) => {
           resolve(true);
         },
       });
-      
+
       if (setZIndex) {
-        (document.querySelector(".openADJsSDKInteractive") as HTMLElement).style.zIndex = "999999999";
+        (
+          document.querySelector(".openADJsSDKInteractive") as HTMLElement
+        ).style.zIndex = "999999999";
       }
     });
-    
+
     return await completeAds;
   };
 
@@ -85,30 +88,36 @@ const entryAds = async (fixedType: AdsType) => {
 
   switch (fixedType || randomADS) {
     case "adsGram":
-      const AdController = await initAdsGram();
-   
+      const AdController = await initAdsGram(debug);
+
       instanceAds.show = async ({ onAdShow, onAdClick, onAdComplete } = {}) => {
-        const onStart = ()=>{
+        const onStart = () => {
           onAdShow && onAdShow();
-          AdController.removeEventListener('onStart',onStart);
-        }
-        // Unbind first
-        
+          // Unbind
+          AdController.removeEventListener("onStart", onStart);
+        };
+
         // bind
-        AdController.addEventListener('onStart',onStart)
+        AdController.addEventListener("onStart", onStart);
         const { done } = await AdController?.show();
         if (done) {
-          onAdComplete && onAdComplete()
+          onAdComplete && onAdComplete();
           return true;
+        }else{
+          entryAds('outLink')
         }
       };
       break;
-      
+
     case "openAd":
       await initAdsOpen();
       const res = await w.getOpenAdTaskAds();
       if (res) {
-        instanceAds.show = async ({ onAdShow, onAdClick, onAdComplete } = {}) => {
+        instanceAds.show = async ({
+          onAdShow,
+          onAdClick,
+          onAdComplete,
+        } = {}) => {
           return showAdWithCallbacks({
             onAdShow,
             onAdClick,
@@ -122,32 +131,55 @@ const entryAds = async (fixedType: AdsType) => {
       break;
 
     case "tonai":
-      const { ads, TonAdPopupShow }: any = await initAdsTonAi();
+      const { ads, TonAdPopupShow }: any = await initAdsTonAi(debug);
       if (ads?.length) {
-        instanceAds.show = async ({ onAdShow, onAdClick, onAdComplete } = {}) => {
+        instanceAds.show = async ({
+          onAdShow,
+          onAdClick,
+          onAdComplete,
+        } = {}) => {
           return showAdWithCallbacks({
             onAdShow,
             onAdClick,
             onAdComplete,
-            adTaskFunction: (params: any) => TonAdPopupShow({
-              tonAd: ads[0],
-              countdown: 10,
-              onAdShow: params.adOpened,
-              onAdClick: params.adClick,
-              onAdComplete: params.adTaskFinished
-            }),
-            setZIndex: false
+            adTaskFunction: (params: any) =>
+              TonAdPopupShow({
+                tonAd: ads[0],
+                countdown: 10,
+                onAdShow: params.adOpened,
+                onAdClick: params.adClick,
+                onAdComplete: params.adTaskFinished,
+              }),
+            setZIndex: false,
           });
         };
       } else {
         instanceAds = await entryAds("adsGram");
       }
       break;
+    case "outLink":
+      instanceAds.show = async ({ onAdShow, onAdClick, onAdComplete } = {}) => {
+        await initAdsOutLink();
+        onAdShow && onAdShow();
+        return await new Promise((resolve) => {
+          const timer = setInterval(() => {
+            if (w.outAdsCountEnd) {
+              if (w.outAdsClick) {
+                onAdClick && onAdClick();
+                onAdComplete && onAdComplete();
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+              clearInterval(timer);
+            }
+          }, 100);
+        });
+      };
   }
-  
+
   return instanceAds;
 };
-
 
 (() => {
   //Prevent server-side rendering

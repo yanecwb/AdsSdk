@@ -1,4 +1,4 @@
-export default async () => {
+export default async (debug=false) => {
   const loadScript = async (scrArrParams: Array<any>) => {
     const insertScript = (src: string, attribute: Record<string, any> = {}) =>
       new Promise((resolve: any, reject: any) => {
@@ -36,7 +36,7 @@ export default async () => {
 
   w.TonAISdk.TonAdInit({
     appId: "673d42c763434c1b83c48194",
-    debug: false,
+    debug,
   });
 
   const { ads } = await w.TonAISdk.GetMultiTonAd("673c816fdcf9cc2173a957ef", 1);
