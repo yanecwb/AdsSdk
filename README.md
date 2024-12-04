@@ -17,16 +17,17 @@
 
 ```javascript
 npm install adspaw
-```
-
-```javascript
+or
 yarn add adspaw
+
+import adspaw
 ```
 
 - Via CDN
 
-```javascript
-https://cdn.jsdelivr.net/npm/adspaw@latest/dist/index.min.js
+加上时间戳以获取最新SDK
+```html
+<script src="https://cdn.jsdelivr.net/npm/adspaw@latest/dist/index.min.js"></script>
 ```
 
 <br/>
