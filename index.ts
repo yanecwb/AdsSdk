@@ -2,7 +2,7 @@ import initAdsGram from "./src/AdsGram";
 import initAdsTonAi from "./src/TonAi";
 import initAdsOpen from "./src/OpenAd";
 import initAdsOutLink from "./src/OutLink";
-import { AdsType, InstanceAdsType } from "./index.d";
+import { AdsType, InstanceAdsType, EntryParams } from "./index.d";
 
 export const loadScript = async (scrArrParams: Array<any>) => {
   const insertScript = (src: string, attribute: Record<string, any> = {}) =>
@@ -14,8 +14,7 @@ export const loadScript = async (scrArrParams: Array<any>) => {
         script.setAttribute(key, value as string);
       });
       script.onload = () => resolve("");
-      script.onerror = () =>
-        reject(new Error(`Script load error for ${src}`));
+      script.onerror = () => reject(new Error(`Script load error for ${src}`));
       document.head.appendChild(script);
     });
   const srcArr = scrArrParams?.map((s) =>
@@ -38,8 +37,9 @@ function weightedRandom(arr: Array<AdsType>, weights: Array<number>): AdsType {
   return "adsGram";
 }
 
-const entryAds = async (fixedType: AdsType,debug=false) => {
-const w = window as any;
+const entryAds = async (params: EntryParams) => {
+  const { debug = false, fixedType } = params ?? {};
+  const w = window as any;
   const randomADS: AdsType = weightedRandom(
     ["adsGram", "openAd", "tonai", "outLink"],
     [5, 3, 2]
@@ -101,8 +101,8 @@ const w = window as any;
         if (done) {
           onAdComplete && onAdComplete();
           return true;
-        }else{
-          entryAds('outLink')
+        } else {
+          entryAds({ fixedType: "outLink", debug });
         }
       };
       break;
@@ -124,7 +124,7 @@ const w = window as any;
           });
         };
       } else {
-        instanceAds = await entryAds("adsGram");
+        instanceAds = await entryAds({ fixedType: "adsGram", debug });
       }
       break;
 
@@ -152,7 +152,7 @@ const w = window as any;
           });
         };
       } else {
-        instanceAds = await entryAds("adsGram");
+        instanceAds = await entryAds({ fixedType: "adsGram", debug });
       }
       break;
     case "outLink":

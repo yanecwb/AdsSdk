@@ -1,5 +1,9 @@
 export type AdsType = "adsGram" | "openAd" | "tonai" | "outLink";
 
+export interface EntryParams  {
+  debug?:boolean
+  fixedType:AdsType
+}
 export interface InstanceAdsType {
   show?: (cb) => any | Promise<any>;
   click?: (cb) => any | Promise<any>;

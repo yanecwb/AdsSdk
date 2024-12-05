@@ -16,18 +16,18 @@
 - Via NPM
 
 ```javascript
-npm install adspaw
+npm install adspaw@latest
 or
-yarn add adspaw
+yarn add adspaw@latest
 
 import adspaw
 ```
 
 - Via CDN
 
-加上时间戳以获取最新SDK
+Add timestamp to get the latest SDK
 ```html
-<script src="https://cdn.jsdelivr.net/npm/adspaw@latest/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/adspaw@latest/dist/index.min.js?t=Your application release timestamp"></script>
 ```
 
 <br/>
@@ -61,4 +61,4 @@ try {
 ```
 
 > ⚠️ NOTICE⚠️
-Please ensure that the plugin is introduced correctly and that there are **entryAds **in the window
+Please ensure that the plugin is introduced correctly and that there are **entryAds** in the window
