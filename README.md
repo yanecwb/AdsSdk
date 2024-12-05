@@ -33,7 +33,11 @@ Add timestamp to get the latest SDK
 <br/>
 
 ```javascript
-const instanceAds = await window.entryAds(); //Get advertising instances in advance
+const instanceAds = await window.entryAds(
+  {
+    debug?:boolean //Boolean value if set to true you will get response from server with test ad.
+  }
+); //Get advertising instances in advance
 
 // During the testing phase, passing in parameters can obtain the test advertisement:entryAds('',true)
 
